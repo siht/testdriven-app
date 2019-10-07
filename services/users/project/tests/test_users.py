@@ -122,6 +122,23 @@ class TestUserService(BaseTestCase):
             self.assertIn('User does not exist', data['message'])
             self.assertIn('fail', data['status'])
 
+    def test_all_users(self):
+        """Ensure get all users behaves correctly."""
+        add_user('michael', 'michael@mherman.org')
+        add_user('fletcher', 'fletcher@notreal.com')
+        with self.client:
+            response = self.client.get('/users')
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(len(data['data']['users']), 2)
+            self.assertIn('michael', data['data']['users'][0]['username'])
+            self.assertIn(
+                'michael@mherman.org', data['data']['users'][0]['email'])
+            self.assertIn('fletcher', data['data']['users'][1]['username'])
+            self.assertIn(
+                'fletcher@notreal.com', data['data']['users'][1]['email'])
+            self.assertIn('success', data['status'])
+
 
 if __name__ == '__main__':
     unittest.main()
