@@ -95,9 +95,7 @@ class TestUserService(BaseTestCase):
 
     def test_single_user(self):
         """Ensure get single user behaves correctly."""
-        user = User(username='michael', email='michael@mherman.org')
-        db.session.add(user)
-        db.session.commit()
+        user = add_user('michael', 'michael@mherman.org')
         with self.client:
             response = self.client.get(f'/users/{user.id}')
             data = json.loads(response.data.decode())
