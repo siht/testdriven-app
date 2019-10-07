@@ -18,6 +18,16 @@ class UsersPing(Resource):
 
 
 class UsersList(Resource):
+    def get(self):
+        """Get all users"""
+        response_object = {
+            'status': 'success',
+            'data': {
+                'users': [user.to_json() for user in User.query.all()]
+            }
+        }
+        return response_object, 200
+
     def post(self):
         post_data = request.get_json()
         response_object = {
@@ -58,12 +68,7 @@ class Users(Resource):
             else:
                 response_object = {
                     'status': 'success',
-                    'data': {
-                        'id': user.id,
-                        'username': user.username,
-                        'email': user.email,
-                        'active': user.active
-                    }
+                    'data': user.to_json()
                 }
                 return response_object, 200
         except ValueError:
